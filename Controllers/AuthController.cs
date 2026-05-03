@@ -14,7 +14,7 @@ namespace BookingApi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AppDbContext _db;
-    private readonly string _key = "";
+    private readonly string _key = "12345";
 
     public AuthController(AppDbContext db)
     {
