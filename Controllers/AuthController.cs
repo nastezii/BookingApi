@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookingApi.Data;
-using BookingApi.DTOs;
-using BookingApi.Models;
+using BookingApi.Infrastructure.Data;
+using BookingApi.Application.Contracts;
+using BookingApi.Infrastructure.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
         if (_db.Users.Any(u => u.Email == request.Email))
             return Conflict("Email exists");
 
-        var user = new User
+        var user = new UserEntity
         {
             Email = request.Email,
             PasswordHash = request.Password 

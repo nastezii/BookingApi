@@ -1,4 +1,4 @@
-using BookingApi.Data;
+using BookingApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
