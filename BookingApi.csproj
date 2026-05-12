@@ -1,34 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="BookingApi.Application\**" />
+	  <Compile Remove="BookingApi.Domain\**" />
+	  <Compile Remove="BookingApi.Infrastructure\**" />
+	  <Compile Remove="BookingApi.Tests\**" />
+	  <Content Remove="BookingApi.Application\**" />
+	  <Content Remove="BookingApi.Domain\**" />
+	  <Content Remove="BookingApi.Infrastructure\**" />
+	  <Content Remove="BookingApi.Tests\**" />
+	  <EmbeddedResource Remove="BookingApi.Application\**" />
+	  <EmbeddedResource Remove="BookingApi.Domain\**" />
+	  <EmbeddedResource Remove="BookingApi.Infrastructure\**" />
+	  <EmbeddedResource Remove="BookingApi.Tests\**" />
+	  <None Remove="BookingApi.Application\**" />
+	  <None Remove="BookingApi.Domain\**" />
+	  <None Remove="BookingApi.Infrastructure\**" />
+	  <None Remove="BookingApi.Tests\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BookingApi.Application\BookingApi.Application.csproj" />
-    <ProjectReference Include="..\BookingApi.Infrastructure\BookingApi.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="DTOs\" />
-  </ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>
+				runtime; build; native; contentfiles; analyzers; buildtransitive
+			</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="BookingApi.Application\BookingApi.Application.csproj" />
+		<ProjectReference Include="BookingApi.Domain\BookingApi.Domain.csproj" />
+		<ProjectReference Include="BookingApi.Infrastructure\BookingApi.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>
