@@ -35,7 +35,10 @@ public class BookingsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var query = new GetBookingsQuery();
+        var query = new GetBookingsQuery
+        {
+            UserId = GetUserId()
+        };
 
         var bookings =
             await _getHandler.Handle(query);

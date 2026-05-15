@@ -18,7 +18,7 @@ public class GetBookingsHandler
         GetBookingsQuery query)
     {
         var bookings =
-            _repository.GetAllByUserId(0);
+            _repository.GetAllByUserId(query.UserId);
 
         var result = bookings
             .Select(x => new BookingReadModel

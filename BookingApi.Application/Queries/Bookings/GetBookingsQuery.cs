@@ -2,4 +2,5 @@
 
 public class GetBookingsQuery
 {
+    public int UserId { get; set; }
 }
