@@ -1,3 +1,4 @@
+using BookingApi.Application.Handlers.Bookings;
 using BookingApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,11 +8,17 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite("Data Source=app.db"));
+
+builder.Services.AddScoped<CreateBookingHandler>();
+
+builder.Services.AddScoped<GetBookingsHandler>();
 
 var key = "key_for_jwt_123456";
 
@@ -24,7 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            IssuerSigningKey =
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(key))
         };
     });
 
@@ -33,14 +42,17 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 app.UseSwagger();
+
 app.UseSwaggerUI();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
 public partial class Program
 {
 }
