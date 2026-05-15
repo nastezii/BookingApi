@@ -7,5 +7,7 @@ public interface IBookingService
 {
     List<Booking> GetAll(int userId);
 
-    Booking Create(int userId, BookingRequest request);
+    Task<Booking> Create(
+        int userId,
+        BookingRequest request);
 }

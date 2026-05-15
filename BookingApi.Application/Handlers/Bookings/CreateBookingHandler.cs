@@ -1,5 +1,4 @@
 ﻿using BookingApi.Application.Commands.Bookings;
-using BookingApi.Domain.Entities;
 using BookingApi.Domain.Factories;
 using BookingApi.Domain.Repositories;
 
@@ -9,31 +8,33 @@ public class CreateBookingHandler
 {
     private readonly IBookingRepository _repository;
 
-    public CreateBookingHandler(IBookingRepository repository)
+    public CreateBookingHandler(
+        IBookingRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<int> Handle(CreateBookingCommand command)
+    public async Task Handle(
+     CreateBookingCommand command)
     {
-        var bookings = await _repository.GetAllAsync();
-
-        var hasConflict = bookings.Any(x =>
-            command.Start < x.End &&
-            command.End > x.Start);
+        var hasConflict =
+            _repository.HasConflict(
+                command.Start,
+                command.End);
 
         if (hasConflict)
         {
-            throw new Exception("Booking conflict");
+            throw new Exception(
+                "Booking conflict");
         }
 
-        var booking = BookingFactory.Create(
-            command.Start,
-            command.End,
-            command.UserId);
+        var booking =
+            BookingFactory.Create(
+                command.UserId,
+                command.Start,
+                command.End,
+                command.Description);
 
         await _repository.AddAsync(booking);
-
-        return booking.Id;
     }
 }

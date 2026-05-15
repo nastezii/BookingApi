@@ -7,4 +7,6 @@ public class CreateBookingCommand
     public DateTime End { get; set; }
 
     public int UserId { get; set; }
+
+    public string Description { get; set; } = "";
 }

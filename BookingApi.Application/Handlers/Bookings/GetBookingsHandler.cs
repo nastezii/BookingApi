@@ -1,29 +1,35 @@
 ﻿using BookingApi.Application.Queries.Bookings;
 using BookingApi.Application.ReadModels.Bookings;
-using BookingApi.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using BookingApi.Domain.Repositories;
 
 namespace BookingApi.Application.Handlers.Bookings;
 
 public class GetBookingsHandler
 {
-    private readonly AppDbContext _context;
+    private readonly IBookingRepository _repository;
 
-    public GetBookingsHandler(AppDbContext context)
+    public GetBookingsHandler(
+        IBookingRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
-    public async Task<List<BookingReadModel>> Handle(GetBookingsQuery query)
+    public Task<List<BookingReadModel>> Handle(
+        GetBookingsQuery query)
     {
-        return await _context.Bookings
+        var bookings =
+            _repository.GetAllByUserId(0);
+
+        var result = bookings
             .Select(x => new BookingReadModel
             {
-                Id = x.Id,
-                Start = x.Start,
-                End = x.End,
-                UserId = x.UserId
+                UserId = x.UserId,
+                Start = x.TimeRange.Start,
+                End = x.TimeRange.End,
+                Description = x.Description
             })
-            .ToListAsync();
+            .ToList();
+
+        return Task.FromResult(result);
     }
 }

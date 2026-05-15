@@ -26,9 +26,9 @@ public class BookingsController : ControllerBase
         _getHandler = getHandler;
     }
 
-    private Guid GetUserId()
+    private int GetUserId()
     {
-        return Guid.Parse(
+        return int.Parse(
             User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
@@ -51,12 +51,12 @@ public class BookingsController : ControllerBase
         {
             Start = request.StartTime,
             End = request.EndTime,
-            UserId = GetUserId()
+            UserId = GetUserId(),
+            Description = request.Description
         };
 
-        var id =
-            await _createHandler.Handle(command);
+        await _createHandler.Handle(command);
 
-        return Ok(id);
+        return Ok();
     }
 }

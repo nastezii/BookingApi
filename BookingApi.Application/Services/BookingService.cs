@@ -3,7 +3,6 @@ using BookingApi.Domain.Entities;
 using BookingApi.Domain.Errors;
 using BookingApi.Domain.Factories;
 using BookingApi.Domain.Repositories;
-using BookingApi.Domain.Errors;
 
 namespace BookingApi.Application.Services;
 
@@ -11,7 +10,8 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _repository;
 
-    public BookingService(IBookingRepository repository)
+    public BookingService(
+        IBookingRepository repository)
     {
         _repository = repository;
     }
@@ -21,22 +21,29 @@ public class BookingService : IBookingService
         return _repository.GetAllByUserId(userId);
     }
 
-    public Booking Create(int userId, BookingRequest request)
+    public async Task<Booking> Create(
+        int userId,
+        BookingRequest request)
     {
-        var hasConflict = _repository.HasConflict(
-            request.StartTime,
-            request.EndTime);
+        var hasConflict =
+            _repository.HasConflict(
+                request.StartTime,
+                request.EndTime);
 
         if (hasConflict)
-            throw new DomainError("Time conflict");
+        {
+            throw new DomainError(
+                "Time conflict");
+        }
 
-        var booking = BookingFactory.Create(
-            userId,
-            request.StartTime,
-            request.EndTime,
-            request.Description);
+        var booking =
+            BookingFactory.Create(
+                userId,
+                request.StartTime,
+                request.EndTime,
+                request.Description);
 
-        _repository.Add(booking);
+        await _repository.AddAsync(booking);
 
         return booking;
     }

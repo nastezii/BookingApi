@@ -4,7 +4,9 @@ namespace BookingApi.Domain.Repositories;
 
 public interface IBookingRepository
 {
-    void Add(Booking booking);
+    Task AddAsync(Booking booking);
+
+    Task<List<Booking>> GetAllAsync();
 
     bool HasConflict(DateTime start, DateTime end);
 

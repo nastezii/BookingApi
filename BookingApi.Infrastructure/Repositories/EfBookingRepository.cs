@@ -5,40 +5,43 @@ using BookingApi.Infrastructure.Mappers;
 
 namespace BookingApi.Infrastructure.Repositories;
 
-public class EfUserRepository : IUserRepository
+public class EfBookingRepository : IBookingRepository
 {
     private readonly AppDbContext _db;
 
-    public EfUserRepository(AppDbContext db)
+    public EfBookingRepository(AppDbContext db)
     {
         _db = db;
     }
 
-    public bool ExistsByEmail(string email)
+    public async Task AddAsync(Booking booking)
     {
-        return _db.Users.Any(u => u.Email == email);
+        var entity = BookingMapper.ToEntity(booking);
+
+        _db.Bookings.Add(entity);
+
+        await _db.SaveChangesAsync();
     }
 
-    public void Add(User user)
+    public async Task<List<Booking>> GetAllAsync()
     {
-        var entity = UserMapper.ToEntity(user);
-
-        _db.Users.Add(entity);
-
-        _db.SaveChanges();
+        return _db.Bookings
+            .Select(BookingMapper.ToDomain)
+            .ToList();
     }
 
-    public User? GetByEmailAndPassword(
-        string email,
-        string password)
+    public bool HasConflict(DateTime start, DateTime end)
     {
-        var entity = _db.Users.FirstOrDefault(u =>
-            u.Email == email &&
-            u.PasswordHash == password);
+        return _db.Bookings.Any(x =>
+            start < x.EndTime &&
+            end > x.StartTime);
+    }
 
-        if (entity == null)
-            return null;
-
-        return UserMapper.ToDomain(entity);
+    public List<Booking> GetAllByUserId(int userId)
+    {
+        return _db.Bookings
+            .Where(x => x.UserId == userId)
+            .Select(BookingMapper.ToDomain)
+            .ToList();
     }
 }
