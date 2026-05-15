@@ -14,7 +14,7 @@ public class CreateBookingHandler
         _repository = repository;
     }
 
-    public async Task<Guid> Handle(CreateBookingCommand command)
+    public async Task<int> Handle(CreateBookingCommand command)
     {
         var bookings = await _repository.GetAllAsync();
 

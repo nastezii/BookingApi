@@ -1,9 +1,7 @@
-﻿using BookingApi.Application.Contracts;
-using BookingApi.Application.Services;
-using BookingApi.Domain.Entities;
-using BookingApi.Domain.Errors;
-using BookingApi.Domain.Repositories;
-using BookingApi.Domain.ValueObjects;
+﻿using BookingApi.Application.Commands.Bookings;
+using BookingApi.Application.Contracts;
+using BookingApi.Application.Handlers.Bookings;
+using BookingApi.Application.Queries.Bookings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -15,42 +13,50 @@ namespace BookingApi.Controllers;
 [Authorize]
 public class BookingsController : ControllerBase
 {
-    private readonly IBookingService _service;
+    private readonly CreateBookingHandler _createHandler;
 
-    public BookingsController(IBookingService service)
+    private readonly GetBookingsHandler _getHandler;
+
+    public BookingsController(
+        CreateBookingHandler createHandler,
+        GetBookingsHandler getHandler)
     {
-        _service = service;
+        _createHandler = createHandler;
+
+        _getHandler = getHandler;
     }
 
-    private int GetUserId()
+    private Guid GetUserId()
     {
-        return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return Guid.Parse(
+            User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     }
 
     [HttpGet]
-    [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var bookings = _service.GetAll(GetUserId());
+        var query = new GetBookingsQuery();
+
+        var bookings =
+            await _getHandler.Handle(query);
 
         return Ok(bookings);
     }
 
     [HttpPost]
-    [HttpPost]
-    public IActionResult Create(BookingRequest request)
+    public async Task<IActionResult> Create(
+        BookingRequest request)
     {
-        try
+        var command = new CreateBookingCommand
         {
-            var booking = _service.Create(
-                GetUserId(),
-                request);
+            Start = request.StartTime,
+            End = request.EndTime,
+            UserId = GetUserId()
+        };
 
-            return Ok(booking);
-        }
-        catch (DomainError ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var id =
+            await _createHandler.Handle(command);
+
+        return Ok(id);
     }
 }

@@ -6,5 +6,5 @@ public class CreateBookingCommand
 
     public DateTime End { get; set; }
 
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
 }
