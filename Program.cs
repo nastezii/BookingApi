@@ -1,3 +1,5 @@
+using BookingApi.Application.EventBus;
+using BookingApi.Application.EventHandlers;
 using BookingApi.Application.Handlers.Bookings;
 using BookingApi.Application.Notifications;
 using BookingApi.Domain.Repositories;
@@ -30,6 +32,13 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<
     INotificationService,
     NotificationService>();
+
+builder.Services.AddScoped<
+    BookingCreatedEventHandler>();
+
+builder.Services.AddScoped<
+    IEventBus,
+    InMemoryEventBus>();
 
 var key = "key_for_jwt_123456";
 
